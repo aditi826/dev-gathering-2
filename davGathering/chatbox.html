@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Responsive Two-User Chatbox</title>
+  <style>
+    body {
+      background: #f3f4f6;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .chat-container {
+      max-width: 430px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(30,41,59,0.15);
+      display: flex;
+      flex-direction: column;
+      height: 70vh;
+      min-height: 400px;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: #fff;
+      padding: 18px 24px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .message-row {
+      display: flex;
+      align-items: flex-end;
+    }
+    .message-row.user1 {
+      justify-content: flex-start;
+    }
+    .message-row.user2 {
+      justify-content: flex-end;
+    }
+    .message {
+      max-width: 75%;
+      padding: 11px 16px;
+      border-radius: 18px;
+      margin-bottom: 2px;
+      font-size: 1rem;
+      word-break: break-word;
+      box-shadow: 0 2px 8px rgba(60,60,60,0.06);
+    }
+    .user1 .message {
+      background: #e0e7ff;
+      color: #222;
+      border-bottom-left-radius: 5px;
+      align-self: flex-start;
+    }
+    .user2 .message {
+      background: #6366f1;
+      color: #fff;
+      border-bottom-right-radius: 5px;
+      align-self: flex-end;
+    }
+    .chat-footer {
+      display: flex;
+      padding: 12px 10px;
+      border-top: 1px solid #e5e7eb;
+      background: #fafafc;
+      gap: 7px;
+    }
+    .user-select {
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background: #f4f4fa;
+      color: #333;
+      margin-right: 5px;
+    }
+    .chat-input {
+      flex: 1;
+      font-size: 1rem;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      background: #f8fafc;
+    }
+    .chat-send-btn {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: #fff;
+      font-weight: 600;
+      padding: 0 22px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background .15s;
+    }
+    .chat-send-btn:active {
+      opacity: 0.88;
+    }
+    @media (max-width: 600px) {
+      .chat-container {
+        max-width: 100vw;
+        margin: 0;
+        height: 100vh;
+        min-height: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      👥 Chatbox Demo (2 users)
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-footer" id="chatForm" autocomplete="off">
+      <select class="user-select" id="userSelect">
+        <option value="user1">User 1</option>
+        <option value="user2">User 2</option>
+      </select>
+      <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." maxlength="500" required />
+      <button type="submit" class="chat-send-btn">Send</button>
+    </form>
+  </div>
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const userSelect = document.getElementById('userSelect');
+    let chatHistory = [];
+    function renderMessages() {
+      chatMessages.innerHTML = '';
+      chatHistory.forEach(msg => {
+        const row = document.createElement('div');
+        row.className = 'message-row ' + msg.user;
+        const bubble = document.createElement('div');
+        bubble.className = 'message';
+        bubble.innerHTML = msg.text;
+        row.appendChild(bubble);
+        chatMessages.appendChild(row);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    chatForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text) return;
+      const user = userSelect.value;
+      chatHistory.push({ user, text });
+      renderMessages();
+      chatInput.value = '';
+      chatInput.focus();
+    });
+    // Optionally, send on enter
+    chatInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        chatForm.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+        e.preventDefault();
+      }
+    });
+    renderMessages();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<body>
+    <h2>Help & FAQs</h2>
+    <p>How can we help you?</p>
+    <div id="chatbot"></div>
+    <script src="chatbot.js"></script>
+</body>
+<script>
+    // Initialize the chatbot
+    const chatbot = document.getElementById('chatbot');
+    chatbot.innerHTML = '<p>Chatbot is loading...</p>';
+
+    // Simulate chatbot loading
+    setTimeout(() => {
+        chatbot.innerHTML = '<p>How can I assist you today?</p>';
+    }, 2000);
